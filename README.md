@@ -28,7 +28,7 @@ That's it for installation.  Phew.
 Start the script the night before (or the day of, if you're up past midnight). It'll automatically log you in the next time it's 7:00AM. ## WARNING: YOU MUST MAKE SURE YOUR COMPUTER WILL NOT SLEEP BEFORE 7:00.  PLUG IT IN AND CHECK THE SETTINGS. ##
 To run, use:
 
-`python3 ~/RegistrationBot/bot.py & disown`
+`python3 ~/RegistrationBot/bot.py`
 
-This will run the script and make sure nothing short of a full reboot will stop it. Follow the instructions to enter your username, password (type carefully, you can't see the prompt for security reasons), and the semester you're registering for.
+This will run the script.  DO NOT CLOSE THE TERMINAL WINDOW. Follow the instructions to enter your username, password (type carefully, you can't see the prompt for security reasons), and the semester you're registering for.
 That's it, good luck!
