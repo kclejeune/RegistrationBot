@@ -6,13 +6,15 @@ fi
 # install necessary dependencies
 brew cask install chromedriver
 brew install python
+clear
 
 # navigate to the directory and install requirements
 cd RegistrationBot
 pip3 install -r requirements.txt
+clear
 
 # change time server to match SIS
-/usr/sbin/systemsetup -setnetworktimeserver "tick.usno.navy.mil"
-/usr/sbin/systemsetup -setusingnetworktime on
+sudo /usr/sbin/systemsetup -setnetworktimeserver "tick.usno.navy.mil"
+sudo /usr/sbin/systemsetup -setusingnetworktime on
 clear
 echo "Installation complete. Refer to README.md for running instructions."
