@@ -1,0 +1,2 @@
+selenium>=3.11.0
+pause>=0.1.2
