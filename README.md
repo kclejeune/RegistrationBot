@@ -42,5 +42,5 @@ To run, use:
 ```bash
 python3 ~/RegistrationBot/bot.py
 ```
-This will run the script.  DO NOT CLOSE THE TERMINAL WINDOW. Follow the instructions to enter your username, password (type carefully, you can't see the prompt for security reasons), and the semester you're registering for.
+DO NOT CLOSE THE TERMINAL WINDOW. Follow the instructions to enter your username, password (type carefully, you can't see the prompt for security reasons), and the semester you're registering for.
 That's it, good luck!
