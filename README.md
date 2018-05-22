@@ -6,9 +6,9 @@ First things first, clone this repository.
 ```bash
 git clone https://github.com/kclejeune/RegistrationBot.git
 ```
-Included with this repository is a script to configure all necessary dependencies for macOS users.  If you'd like to ignore the boring stuff, then just run the following:
+Included with this repository is a setup script to configure all necessary dependencies for macOS users.  If you'd like to ignore the boring stuff, then just run the following:
 ```bash
-bash ~/RegistrationBot/config.sh
+bash ~/RegistrationBot/setup.sh
 ```
 The script will prompt for an admin password once, and then clean itself up at the end. If you run this, you can skip to the fun stuff.
 ### If you prefer to follow the instructions, the following will act the same as the script:
