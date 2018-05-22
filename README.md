@@ -25,7 +25,8 @@ sudo /usr/sbin/systemsetup -setusingnetworktime on
 ```
 That's it for installation.  Phew.
 ## Running Instructions ##
-Start the script the night before (or the day of, if you're up past midnight). It'll automatically log you in the next time it's 7:00AM. ## WARNING: YOU MUST MAKE SURE YOUR COMPUTER WILL NOT SLEEP BEFORE 7:00.  PLUG IT IN AND CHECK THE SETTINGS. ##
+Start the script the night before (or the day of, if you're up past midnight). It'll automatically log you in the next time it's 7:00AM. 
+## WARNING: YOU MUST MAKE SURE YOUR COMPUTER WILL NOT SLEEP BEFORE 7:00.  PLUG IT IN AND CHECK THE SETTINGS.
 To run, use:
 
 `python3 ~/RegistrationBot/bot.py`
