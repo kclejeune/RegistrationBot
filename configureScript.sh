@@ -9,7 +9,7 @@ brew install python
 clear
 
 # navigate to the directory and install requirements
-cd RegistrationBot
+cd ~/RegistrationBot
 pip3 install -r requirements.txt
 clear
 
