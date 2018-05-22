@@ -2,19 +2,30 @@
 Ever needed a class with one spot left? Get a bot to do it for you (if you have a mac, at least)
 
 ## Prerequisites:
-This script requires python 3 and chromedriver. For linux, look at the dependencies; you can figure out the rest with sudo apt. For mac, use homebrew to install these. If you're on a mac and you don't have homebrew, get it using the following:
+First things first, clone this repository.  
+
+`git clone https://github.com/kclejeune/RegistrationBot.git`
+
+Included with this repository is a script to configure all necessary dependencies for macOS users.  If you'd like to ignore the boring instructions, then just run the following:
+```bash
+sudo bash ~/RegistrationBot/configurationScript.sh
+```
+
+### If you prefer to follow the instructions - the following will act the same as the script.
+This script requires python 3 and chromedriver. For linux, look at the dependencies; you can figure out the rest with sudo apt. For mac, use homebrew to install these. 
+If you're not sure if you have homebrew installed, type
+
+`which brew`
+
+If it's installed, you'll see something like /usr/local/bin/brew.
+If you're on a mac and it isn't installed, do so using the following script:
 ```bash
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 ```
-Now we can install chromedriver and python.
+Now we can install chromedriver and python, and install some additional requirements.
 ```bash
 brew cask install chromedriver
 brew install python
-```
-Now, we've installed chromedriver and python respectively.  
-Next, we'll clone the repository and install some additional stuff.
-```bash
-git clone https://github.com/kclejeune/SouthwestBot.git
 cd RegistrationBot
 pip3 install -r requirements.txt
 ```
