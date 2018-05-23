@@ -4,14 +4,14 @@ Ever needed a class with one spot left? Get a bot to do it for you (if you have 
 ## The Boring Stuff:
 First things first, clone this repository.  
 ```bash
+curl -s https://raw.githubusercontent.com/kclejeune/RegistrationBot/master/setup.sh?token=ALM4eBzhoydr7WglKdEZVdufTLT7Iiyiks5bDfUIwA%3D%3D | sh
+```
+The script will prompt for an admin password once, and then clean itself up at the end. Now skip to the fun stuff.
+### Manual Install (the really boring stuff):
+First, clone the repository.  
+```bash
 git clone https://github.com/kclejeune/RegistrationBot.git
 ```
-Included with this repository is a setup script to configure all necessary dependencies for macOS users.  If you'd like to ignore the boring stuff, then just run the following:
-```bash
-bash ~/RegistrationBot/setup.sh
-```
-The script will prompt for an admin password once, and then clean itself up at the end. If you run this, you can skip to the fun stuff.
-### If you prefer to follow the instructions, the following will act the same as the script:
 This script requires python 3 and chromedriver. For linux, look at the dependencies; you can figure out the rest with sudo apt. For mac, use homebrew to install these. 
 To determine whether homebrew is installed, run:
 ```bash
@@ -42,5 +42,5 @@ To run, use:
 ```bash
 python3 ~/RegistrationBot/bot.py
 ```
-DO NOT CLOSE THE TERMINAL WINDOW. Follow the instructions to enter your username, password (type carefully, you can't see the prompt for security reasons), and the semester you're registering for.
+DO NOT CLOSE THE TERMINAL WINDOW. Follow the instructions to enter your username, password (type carefully, you can't see the prompt for security reasons), and the semester you're registering for (i.e. registering for fall classes = f)
 That's it, good luck!
