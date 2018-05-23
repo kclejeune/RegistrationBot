@@ -10,6 +10,9 @@ brew cask install chromedriver
 brew install python
 clear
 
+# clone the repository
+git clone https://github.com/kclejeune/RegistrationBot.git
+
 # navigate to the directory and install requirements
 cd ~/RegistrationBot
 pip3 install -r requirements.txt
