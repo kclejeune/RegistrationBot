@@ -3,7 +3,6 @@ import getpass
 import math
 import os
 from sys import argv
-from datetime import datetime
 import time
 from datetime import datetime
 
