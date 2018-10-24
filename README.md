@@ -1,13 +1,18 @@
 # CWRU SIS Registration Bot:
+
 Ever needed a class with one spot left? Get a bot to do it for you (if you have a mac, at least)
 
 ## The Boring Stuff:
-First things first, clone this repository.  
+
+If you're smart, you'll take my word for it that this works. Run this and your life will be magical.
+
 ```bash
 curl -s https://raw.githubusercontent.com/kclejeune/RegistrationBot/master/setup.sh?token=ALM4eBzhoydr7WglKdEZVdufTLT7Iiyiks5bDfUIwA%3D%3D | sh
 ```
 The script will prompt for an admin password once, and then clean itself up at the end. Now skip to the fun stuff.
+
 ### Manual Install (the really boring stuff):
+
 First, clone the repository.  
 ```bash
 git clone https://github.com/kclejeune/RegistrationBot.git
