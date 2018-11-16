@@ -7,7 +7,7 @@ Ever needed a class with one spot left? Get a bot to do it for you (if you have 
 If you're smart, you'll take my word for it that this works. Run this and your life will be magical.
 
 ```bash
-curl -s https://raw.githubusercontent.com/kclejeune/RegistrationBot/master/setup.sh?token=ALM4eLUGFxtfLcwsHyWIF38o13531XURks5b9045wA%3D%3D | sh
+curl -s https://raw.githubusercontent.com/kclejeune/RegistrationBot/master/setup.sh?token=ALM4eGvDL5a1cUMJR8otTtY1m4aQZ4WDks5b9094wA%3D%3D | sh
 ```
 The script will prompt for an admin password once, and then clean itself up at the end. Now skip to the fun stuff.
 
