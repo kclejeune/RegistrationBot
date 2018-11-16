@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # clone the repository
-git clone https://github.com/kclejeune/RegistrationBot.git
+ssh git@github.com:kclejeune/RegistrationBot.git
 
 # check if homebrew is installed and install if not
 if [ ! -e /usr/local/bin/brew ]; then
