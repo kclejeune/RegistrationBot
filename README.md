@@ -4,10 +4,11 @@ Ever needed a class with one spot left? Get a bot to do it for you (if you have 
 
 ## The Boring Stuff:
 
-If you're smart, you'll take my word for it that this works. Run this and your life will be magical.
+If you're smart, you'll take my word for it that this works. Run this and your life will be magical. 
+### EDIT: DON'T TAKE MY WORD FOR IT THIS DOESN'T WORK WITH A PRIVATE REPO
 
 ```bash
-curl -s https://raw.githubusercontent.com/kclejeune/RegistrationBot/master/setup.sh?token=ALM4eGvDL5a1cUMJR8otTtY1m4aQZ4WDks5b9094wA%3D%3D | sh
+curl -s https://raw.githubusercontent.com/kclejeune/RegistrationBot/master/setup.sh?token=ALM4eInbVfPxflCvkGt5zwkoY9eGwHzfks5b-4F7wA%3D%3D | sh
 ```
 The script will prompt for an admin password once, and then clean itself up at the end. Now skip to the fun stuff.
 
