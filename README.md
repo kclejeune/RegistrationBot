@@ -12,7 +12,7 @@ curl -s https://raw.githubusercontent.com/kclejeune/RegistrationBot/master/setup
 ```
 The script will prompt for an admin password once, and then clean itself up at the end. Now skip to the fun stuff.
 
-### Manual Install (the really boring stuff):
+## Manual Install (the really boring stuff):
 
 First, clone the repository.  
 ```bash
