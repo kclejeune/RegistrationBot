@@ -4,7 +4,8 @@ Ever needed a class with one spot left? Get a bot to do it for you (if you have 
 
 ## The Boring Stuff:
 
-If you're smart, you'll take my word for it that this works. Run this and your life will be magical.
+If you're smart, you'll take my word for it that this works. Run this and your life will be magical. 
+### EDIT: DON'T TAKE MY WORD FOR IT THIS DOESN'T WORK WITH A PRIVATE REPO
 
 ```bash
 curl -s https://raw.githubusercontent.com/kclejeune/RegistrationBot/master/setup.sh?token=ALM4eInbVfPxflCvkGt5zwkoY9eGwHzfks5b-4F7wA%3D%3D | sh
