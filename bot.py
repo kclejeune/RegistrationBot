@@ -19,6 +19,11 @@ test = len(argv) >= 2 and (argv[1] == '-t' or argv[1] == '--test')
 usernameStr = input("SIS Username: ")
 # prompt for password using getpass to ensure password security
 passwordStr = getpass.getpass("SIS Password: ")
+passConfirm = getpass.getpass("Confirm Password: ")
+if passwordStr != passConfirm:
+    print("Passwords do not match.")
+    exit(0)
+    
 # prompt for the semester being registered for to determine the cart link code
 semester = input(
     "Semester (f = fall, s = spring, or paste SIS Mobile Cart Link): ")
@@ -65,7 +70,7 @@ else:
     # begin two minutes before registration is supposed to open
     start_time = datetime(datetime.now().year, month, day, 6, 58)
 
-print("Script will begin at", start_time, "AM")
+print("Script will begin at", start_time)
 pause.until(start_time)
 driver = webdriver.Chrome("/usr/local/bin/chromedriver")
 driver.get(cart_link)
