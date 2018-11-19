@@ -100,10 +100,12 @@ enroll = driver.find_element_by_id('enroll')
 
 # wait until 7:00AM and then click enroll
 if not test:
-    pause.until(datetime(datetime.now().year, month, day, 7))
+    enroll_time = datetime(datetime.now().year, month, day, 7)
 else:
-    pause.until(datetime(datetime.now().year, datetime.now().month, datetime.now().day, 14, 56))
-
+    enroll_time = datetime.now() + timedelta(seconds=10)
+    
+print("Enrolling at: ", enroll_time) 
+pause.until(enroll_time)
 enroll.click()
 WebDriverWait(driver, 10)
 
