@@ -9,7 +9,7 @@ The script will prompt for an admin password once, and then clean itself up at t
 ### Linux:
 ```bash
 sudo apt install curl
-curl -s https://raw.githubusercontent.com/kclejeune/RegistrationBot/master/linuxSetup.sh?token=ALM4eG-J1RQtKLOv0QmjkoLvbsoX8GsXks5ctXy3wA%3D%3D | sh
+curl -s https://raw.githubusercontent.com/kclejeune/RegistrationBot/master/linuxSetup.sh?token=ALM4eG-J1RQtKLOv0QmjkoLvbsoX8GsXks5ctXy3wA%3D%3D | bash
 ```
 
 ### MacOS:
