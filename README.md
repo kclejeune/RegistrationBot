@@ -2,27 +2,37 @@
 
 Ever needed a class with one spot left? Get a bot to do it for you (if you have a mac, at least)
 
-## The Boring Stuff:
+## Installation Scripts: You can trust me, I promise
 
-If you're smart, you'll take my word for it that this works. Run this and your life will be magical. 
-
-### EDIT: DON'T TAKE MY WORD FOR IT THIS DOESN'T WORK WITH PRIVATE REPOS
-
-```bash
-curl -s https://raw.githubusercontent.com/kclejeune/RegistrationBot/master/setup.sh?token=ALM4eInbVfPxflCvkGt5zwkoY9eGwHzfks5b-4F7wA%3D%3D | sh
-```
 The script will prompt for an admin password once, and then clean itself up at the end. Now skip to the fun stuff.
 
+### Linux:
+```bash
+sudo apt install curl
+curl -s https://raw.githubusercontent.com/kclejeune/RegistrationBot/master/setup.sh?token=ALM4eInbVfPxflCvkGt5zwkoY9eGwHzfks5b-4F7wA%3D%3D | sh
+```
+
+### MacOS (currently unsupported):
+
+```bash
+curl -s https://raw.githubusercontent.com/kclejeune/RegistrationBot/master/setup.sh?token=ALM4eInbVfPxflCvkGt5zwkoY9eGwHzfks5b-4F7wA%3D%3D | bash
+```
 ## Manual Installation
 
 First, clone the repository.  
 ```bash
 git clone https://github.com/kclejeune/RegistrationBot.git
 ```
-This script requires python 3 and chromedriver. For linux, just look at the dependencies; you can figure out the rest with apt-get or yum or whatever you choose to use. For mac, use homebrew to install these. 
-To determine whether homebrew is installed, run:
+This script requires python 3 and chromedriver. For linux, install them with 
 ```bash
-which brew
+sudo apt install python3 python3-pip chromium-chromedriver
+```
+
+For mac, use homebrew to install these. To check if you have it and install if not, run
+```bash
+if [ ! -e /usr/local/bin/brew ]; then
+    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+fi
 ```
 If it's installed, you'll see something like `/usr/local/bin/brew`
 If you don't see this, run the installation script:
@@ -36,7 +46,7 @@ brew install python
 cd RegistrationBot
 pip3 install -r requirements.txt
 ```
-Finally, we need to synchronize with the naval time server to match with SIS servers.  This just updates your timeserver from time.apple.com to tick.usno.navy.mil. It requires sudo to modify /usr/sbin, but it's completely safe.
+Finally, we need to synchronize with the naval time server to match with SIS servers.  This just updates your timeserver from time.apple.com to tick.usno.navy.mil. It requires sudo to modify /usr/sbin, but it's considered safe.
 ```bash
 sudo /usr/sbin/systemsetup -setnetworktimeserver "tick.usno.navy.mil"
 sudo /usr/sbin/systemsetup -setusingnetworktime on
