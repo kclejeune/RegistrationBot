@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import getpass
 import math
 import os
@@ -72,7 +72,7 @@ else:
 
 print("Script will begin at", start_time)
 pause.until(start_time)
-driver = webdriver.Chrome("/usr/local/bin/chromedriver")
+driver = webdriver.Chrome("chromedriver")
 driver.get(cart_link)
 
 # wait for the login screen to load
