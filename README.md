@@ -1,50 +1,41 @@
 # CWRU SIS Registration Bot:
 
-Ever needed a class with one spot left? Get a bot to do it for you (if you have a mac, at least)
+Ever needed a class with one spot left? Get a bot to do it for you (if you're using *NIX, at least)
 
-## Installation Scripts: You can trust me, I promise
+## Prerequisite Dependencies
 
-The script will prompt for an admin password once, and then clean itself up at the end. Now skip to the fun stuff.
+First things first, clone the repository:
 
-### Linux:
-```bash
-sudo apt install curl
-curl -s https://raw.githubusercontent.com/kclejeune/RegistrationBot/master/linuxSetup.sh?token=ALM4eG-J1RQtKLOv0QmjkoLvbsoX8GsXks5ctXy3wA%3D%3D | bash
-```
-
-### MacOS:
-```bash
-curl -s https://raw.githubusercontent.com/kclejeune/RegistrationBot/master/macSetup.sh?token=ALM4eDyS_Mhx8-AG0cDohPHA0V6vZLqOks5ctX0owA%3D%3D | bash
-```
-## Manual Installation
-
-First, clone the repository.  
 ```bash
 git clone https://github.com/kclejeune/RegistrationBot.git
 ```
-This script requires python 3 and chromedriver. For linux, install them with 
+
+Next, install the dependencies according to your preferred OS.
+
+### Linux
+
 ```bash
 sudo apt install python3 python3-pip chromium-chromedriver
 ```
 
-For mac, use homebrew to install these. To check if you have it and install if not, run
+### macOS
+
+We'll use homebrew as our package manager to install the things we need. Running the following will install it if it isn't yet installed, along with the necessary dependencies.
+
 ```bash
+# check if homebrew is installed and install if not
 if [ ! -e /usr/local/bin/brew ]; then
     /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 fi
-```
-If it's installed, you'll see something like `/usr/local/bin/brew`
-If you don't see this, run the installation script:
-```bash
-/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-```
-Now we can install chromedriver and python, and install some additional requirements.
-```bash
+
+# install necessary dependencies
 brew cask install chromedriver
 brew install python
-cd RegistrationBot
-pip3 install -r requirements.txt
+clear
 ```
+
+## Turn on "set date and time via network" 
+
 Finally, we need to synchronize with the naval time server to match with SIS servers.  This just updates your timeserver from time.apple.com to tick.usno.navy.mil. It requires sudo to modify /usr/sbin, but it's considered safe.
 ```bash
 sudo /usr/sbin/systemsetup -setnetworktimeserver "tick.usno.navy.mil"
