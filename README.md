@@ -34,6 +34,15 @@ brew install python
 clear
 ```
 
+### Both
+
+We'll need a few python libraries.  You can install them with
+
+```bash
+cd ~/RegistrationBot
+pip3 install -r requirements.txt
+```
+
 ## Turn on "set date and time via network" 
 
 Finally, we need to synchronize with the naval time server to match with SIS servers.  This just updates your timeserver from time.apple.com to tick.usno.navy.mil. It requires sudo to modify /usr/sbin, but it's considered safe.
@@ -56,5 +65,6 @@ To run the script, use:
 ```bash
 python3 ~/RegistrationBot/bot.py
 ```
+
 Follow the instructions to enter your username, password (type carefully, you can't see the prompt for security reasons), and the semester you're registering for (i.e. registering for fall classes = f)
 That's it, good luck!
