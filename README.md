@@ -1,16 +1,28 @@
 # CWRU SIS Registration Bot:
 
-Ever needed a class with one spot left? Get a bot to do it for you (if you're using *NIX, at least)
+Ever needed a class with one spot left? Get a bot to do it for you (if you're using \*NIX, at least)
 
-## Prerequisite Dependencies
+## Dependency Install Scripts
 
-First things first, clone the repository:
+Clone the repository and navigate to its directory.
 
 ```bash
 git clone https://github.com/kclejeune/RegistrationBot.git
+cd RegistrationBot
 ```
+To run the installer script, use 
+```bash
+bash linuxInstall.sh
+``` 
+or 
+```bash
+bash macInstall.sh
+```
+depending on your operating system.
 
-Next, install the dependencies according to your preferred OS.
+## Manual Install Instructions
+
+Install the dependencies according to your preferred OS.
 
 ### Linux
 
@@ -29,7 +41,7 @@ if [ ! -e /usr/local/bin/brew ]; then
 fi
 
 # install necessary dependencies
-brew cask install chromedriver
+brew cask install chromedriver google-chrome
 brew install python
 clear
 ```
@@ -42,15 +54,6 @@ We'll need a few python libraries.  You can install them with
 cd ~/RegistrationBot
 pip3 install -r requirements.txt
 ```
-
-## Turn on "set date and time via network" 
-
-Finally, we need to synchronize with the naval time server to match with SIS servers.  This just updates your timeserver from time.apple.com to tick.usno.navy.mil. It requires sudo to modify /usr/sbin, but it's considered safe.
-```bash
-sudo /usr/sbin/systemsetup -setnetworktimeserver "tick.usno.navy.mil"
-sudo /usr/sbin/systemsetup -setusingnetworktime on
-```
-That's it for installation.  Phew.
 
 ## The Fun Stuff (kind of):
 
