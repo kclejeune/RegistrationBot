@@ -1,4 +1,4 @@
-# CWRU SIS Registration Bot:
+# Registration Bot
 
 Ever needed a class with one spot left? Get a bot to do it for you (if you're using \*NIX, at least)
 
@@ -10,6 +10,7 @@ Clone the repository and navigate to its directory.
 git clone https://github.com/kclejeune/RegistrationBot.git
 cd RegistrationBot
 ```
+
 To run the installer script, use 
 ```bash
 bash linuxInstall.sh
@@ -55,14 +56,12 @@ cd ~/RegistrationBot
 pip3 install -r requirements.txt
 ```
 
-## The Fun Stuff (kind of):
+## Using the Script
 
-Start the script the night before (or the day of, if you're up past midnight). It'll automatically log you in the next time it's 7:00AM. 
+**WARNING: YOU MUST MAKE SURE YOUR COMPUTER WILL NOT SLEEP BEFORE 7:00.  PLUG IT IN AND CHECK THE SETTINGS**
 
-## WARNING: YOU MUST MAKE SURE YOUR COMPUTER WILL NOT SLEEP BEFORE 7:00.  PLUG IT IN AND CHECK THE SETTINGS. 
-
-Fair warning, it is *highly* recommended to use a utility to prevent your computer from sleeping. 
-I'd recommend running `brew cask install keepingyouawake`, which will allow you to 'caffeinate' your computer overnight.
+It is *highly* recommended to use a utility to prevent your computer from sleeping. 
+I'd recommend running `brew cask install keepingyouawake` or `sudo apt install caffeine`, which will allow you to 'caffeinate' your computer overnight.
 
 To run the script, use:
 ```bash
