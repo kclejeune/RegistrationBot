@@ -63,9 +63,10 @@ pip3 install -r requirements.txt
 It is *highly* recommended to use a utility to prevent your computer from sleeping. 
 I'd recommend running `brew cask install keepingyouawake` or `sudo apt install caffeine`, which will allow you to 'caffeinate' your computer overnight.
 
-To run the script, use:
+To run the script, navigate to the RegistrationBot directory and run:
+
 ```bash
-python3 ~/RegistrationBot/bot.py
+python3 bot.py
 ```
 
 Follow the instructions to enter your username, password (type carefully, you can't see the prompt for security reasons), and the semester you're registering for (i.e. registering for fall classes = f)
