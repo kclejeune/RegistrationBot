@@ -26,7 +26,7 @@ if passwordStr != passConfirm:
 
 # if it's the day of registration
 if datetime.now().time().hour < 7:
-    registrationDate = datetime.today
+    registrationDate = datetime.now()
 else:
     # registration is tomorrow
     registrationDate = datetime.now() + timedelta(days=1)
