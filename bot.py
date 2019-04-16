@@ -23,7 +23,7 @@ passConfirm = getpass.getpass("Confirm Password: ")
 if passwordStr != passConfirm:
     print("Passwords do not match.")
     exit(0)
-    
+
 # prompt for the semester being registered for to determine the cart link code
 semester = input(
     "Semester (f = fall, s = spring, or paste SIS Mobile Cart Link): ")
@@ -103,13 +103,19 @@ if not test:
     enroll_time = datetime(datetime.now().year, month, day, 7)
 else:
     enroll_time = datetime.now() + timedelta(seconds=10)
-    
-print("Enrolling at: ", enroll_time) 
+
+print("Enrolling at: ", enroll_time)
+# pause until 7AM and click immediately after
 pause.until(enroll_time)
 enroll.click()
-WebDriverWait(driver, 10)
+
+# keep clicking until a minute after in case we miss it
+while datetime.now() < enroll_time + timedelta(minutes=1):
+    if EC.presence_of_element_located((By.ID, 'cart-select-all')):
+        driver.find_element_by_id('cart-select-all').click()
+        driver.find_element_by_id('enroll').click()
 
 if EC.presence_of_element_located((By.ID, 'cart-select-all')):
     print("Registration Failed")
 else:
-    print("Successfully Registered")
+    print("Registration Successful")
