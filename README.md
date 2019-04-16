@@ -1,16 +1,29 @@
-# CWRU SIS Registration Bot:
+# Registration Bot
 
-Ever needed a class with one spot left? Get a bot to do it for you (if you're using *NIX, at least)
+Ever needed a class with one spot left? Get a bot to do it for you (if you're using \*NIX, at least)
 
-## Prerequisite Dependencies
+## Dependency Install Scripts
 
-First things first, clone the repository:
+Clone the repository and navigate to its directory.
 
 ```bash
 git clone https://github.com/kclejeune/RegistrationBot.git
+cd RegistrationBot
 ```
 
-Next, install the dependencies according to your preferred OS.
+To run the installer script, use 
+```bash
+bash linuxInstall.sh
+``` 
+or 
+```bash
+bash macInstall.sh
+```
+depending on your operating system.
+
+## Manual Install Instructions
+
+Install the dependencies according to your preferred OS.
 
 ### Linux
 
@@ -29,7 +42,7 @@ if [ ! -e /usr/local/bin/brew ]; then
 fi
 
 # install necessary dependencies
-brew cask install chromedriver
+brew cask install chromedriver google-chrome
 brew install python
 clear
 ```
@@ -43,27 +56,17 @@ cd ~/RegistrationBot
 pip3 install -r requirements.txt
 ```
 
-## Turn on "set date and time via network" 
+## Using the Script
 
-Finally, we need to synchronize with the naval time server to match with SIS servers.  This just updates your timeserver from time.apple.com to tick.usno.navy.mil. It requires sudo to modify /usr/sbin, but it's considered safe.
+**WARNING: YOU MUST MAKE SURE YOUR COMPUTER WILL NOT SLEEP BEFORE 7:00.  PLUG IT IN AND CHECK THE SETTINGS**
+
+It is *highly* recommended to use a utility to prevent your computer from sleeping. 
+I'd recommend running `brew cask install keepingyouawake` or `sudo apt install caffeine`, which will allow you to 'caffeinate' your computer overnight.
+
+To run the script, navigate to the RegistrationBot directory and run:
+
 ```bash
-sudo /usr/sbin/systemsetup -setnetworktimeserver "tick.usno.navy.mil"
-sudo /usr/sbin/systemsetup -setusingnetworktime on
-```
-That's it for installation.  Phew.
-
-## The Fun Stuff (kind of):
-
-Start the script the night before (or the day of, if you're up past midnight). It'll automatically log you in the next time it's 7:00AM. 
-
-## WARNING: YOU MUST MAKE SURE YOUR COMPUTER WILL NOT SLEEP BEFORE 7:00.  PLUG IT IN AND CHECK THE SETTINGS. 
-
-Fair warning, it is *highly* recommended to use a utility to prevent your computer from sleeping. 
-I'd recommend running `brew cask install keepingyouawake`, which will allow you to 'caffeinate' your computer overnight.
-
-To run the script, use:
-```bash
-python3 ~/RegistrationBot/bot.py
+python3 bot.py
 ```
 
 Follow the instructions to enter your username, password (type carefully, you can't see the prompt for security reasons), and the semester you're registering for (i.e. registering for fall classes = f)
