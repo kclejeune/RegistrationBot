@@ -24,12 +24,12 @@ if passwordStr != passConfirm:
     print("Passwords do not match.")
     exit(0)
 
-# if it's the day of registration
-if datetime.now().time().hour < 7:
-    registrationDate = datetime.now()
-else:
+today = datetime.now()
+# if it's the day of registration\
+enroll_date = datetime(today.year, today.month, today.day, 7)
+if today.hour > 7:
     # registration is tomorrow
-    registrationDate = datetime.now() + timedelta(days=1)
+    enroll_date += timedelta(days=1)
 
 # base cart link for sis-mobile
 cart_link = "https://sismobile.case.edu/app/student/enrollmentcart/cart/CASE1/UGRD/"
@@ -58,11 +58,11 @@ if test:
     start_time = datetime.now() + timedelta(seconds=5)
 else:
     # begin two minutes before registration is supposed to open
-    start_time = datetime(registrationDate.year, registrationDate.month, registrationDate.day, 6, 58)
+    start_time = enroll_date - timedelta(minutes=2)
 
 print("Script will begin at", start_time)
 pause.until(start_time)
-driver = webdriver.Chrome("chromedriver")
+driver = webdriver.Chrome()
 driver.get(cart_link)
 
 # wait for the login screen to load
@@ -84,27 +84,28 @@ login.click()
 WebDriverWait(driver, 10).until(
     EC.presence_of_element_located((By.ID, 'cart-select-all')))
 
+# find the necessary buttons
 select_all = driver.find_element_by_id('cart-select-all')
 select_all.click()
 enroll = driver.find_element_by_id('enroll')
 
-# wait until 7:00AM and then click enroll
-if not test:
-    enroll_time = datetime(registrationDate.year, registrationDate.month, registrationDate.day, 7)
-else:
-    enroll_time = datetime.now() + timedelta(seconds=10)
+# click enroll in 5 seconds from now if testing
+if test:
+    enroll_date = datetime.now() + timedelta(seconds=5)
 
-print("Enrolling at: ", enroll_time)
 # pause until 7AM and click immediately after
-pause.until(enroll_time)
+print("Enrolling at: ", enroll_date)
+pause.until(enroll_date)
 enroll.click()
 
 # keep clicking until a minute after in case we miss it
-while datetime.now() < enroll_time + timedelta(minutes=1):
+while datetime.now() < enroll_date + timedelta(minutes=1):
+    # once the cart page loads again, find the buttons again and click them
     if EC.presence_of_element_located((By.ID, 'cart-select-all')):
         driver.find_element_by_id('cart-select-all').click()
         driver.find_element_by_id('enroll').click()
 
+# if we're still on the cart page, we messed up :(
 if EC.presence_of_element_located((By.ID, 'cart-select-all')):
     print("Registration Failed")
 else:
