@@ -68,7 +68,9 @@ else:
     start_time = enroll_date - timedelta(minutes=2)
 
 
-def browser_init(Browser=Chrome, Options=ChromeOptions, headless=False, size=(1920, 1080)):
+def browser_init(
+    Browser=Chrome, Options=ChromeOptions, headless=False, size=(1920, 1080)
+):
     options = Options()
     options.headless = True
     driver = Browser(options=Options)
@@ -82,14 +84,26 @@ class Enroller:
     driver = None
     enroll_time = None
 
-    def __init__(self, enroll_time=enroll_date, browser=Chrome, opts=ChromeOptions, headless=False,
-                 size=(1920, 1080)):
-        self.driver = browser_init(Browser=browser, Options=opts, headless=headless, size=size)
+    def __init__(
+        self,
+        enroll_time=enroll_date,
+        browser=Chrome,
+        opts=ChromeOptions,
+        headless=False,
+        size=(1920, 1080),
+        test=False,
+    ):
+        self.driver = browser_init(
+            Browser=browser, Options=opts, headless=headless, size=size
+        )
         self.enroll_time = enroll_time
         self.thread = Thread(target=self.enroll)
+        self.headless = headless
+        self.verbose = verbose
+        self.test = test
 
     def log(self, msg):
-        if headless or verbose:
+        if self.headless or self.verbose:
             print("{}: {}".format(self.thread.ident, msg))
 
     def enroll(self):
@@ -99,7 +113,9 @@ class Enroller:
         # setup the web self.driver
         self.driver.get(base_url)
         # wait for the login screen to load
-        WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.ID, "login")))
+        WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.ID, "login"))
+        )
 
         self.log("Logging into SIS")
         # enter username & password
