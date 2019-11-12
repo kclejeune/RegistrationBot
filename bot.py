@@ -73,7 +73,7 @@ def browser_init(
 ):
     options = Options()
     options.headless = True
-    driver = Browser(options=Options)
+    driver = Browser(options=options)
     if headless:
         driver.set_window_size(size[0], size[1])
     return driver
@@ -104,7 +104,7 @@ class Enroller:
 
     def log(self, msg):
         if self.headless or self.verbose:
-            print("{}: {}".format(self.thread.ident, msg))
+            print("{}: {}".format(self.thread.name, msg))
 
     def enroll(self):
         print("Starting browser at", start_time)
@@ -164,4 +164,6 @@ class Enroller:
 
 
 # main stuff
-
+for i in range(num_threads):
+    e = Enroller(enroll_date, browser=Firefox, opts=FirefoxOptions, headless=headless, test=test)
+    e.thread.start()
