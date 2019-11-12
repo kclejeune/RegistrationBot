@@ -3,6 +3,7 @@ import getpass
 from datetime import datetime
 from datetime import timedelta
 from sys import argv
+from threading import Thread
 
 import pause
 from selenium.webdriver import Firefox, Chrome, FirefoxOptions, ChromeOptions
@@ -16,6 +17,16 @@ ignore_password_validation = "--ignore-password" in argv or "-i" in argv
 use_firefox = "--firefox" in argv or "-f" in argv
 headless = "--headless" in argv or "-h" in argv
 verbose = "--verbose" in argv or "-v" in argv
+num_threads = 1
+
+if "-n" in argv:
+    num_threads_i = argv.index("-n") + 1
+    num_threads = int(argv[num_threads_i])
+elif "--num-threads" in argv:
+    num_threads_i = argv.index("--num-threads") + 1
+    num_threads = int(argv[num_threads_i])
+
+print("Using {} thread(s).".format(num_threads))
 
 if use_firefox:
     Browser = Firefox
@@ -56,71 +67,85 @@ else:
     # begin two minutes before registration is supposed to open
     start_time = enroll_date - timedelta(minutes=2)
 
-if headless or verbose:
-    print("Running in headless mode")
 
-print("Script will begin at", start_time)
-pause.until(start_time)
+def browser_init(Browser=Chrome, Options=ChromeOptions, headless=False, size=(1920, 1080)):
+    options = Options()
+    options.headless = True
+    driver = Browser(options=Options)
+    if headless:
+        driver.set_window_size(size[0], size[1])
+    return driver
 
-# setup the web driver
-options = Options()
-options.headless = True
-driver = Browser(options=options)
-if headless:
-    driver.set_window_size(1920, 1080)
-driver.get(base_url)
-# wait for the login screen to load
-WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "login")))
 
-if headless or verbose:
-    print("Logging into SIS")
-# enter username
-username = driver.find_element_by_name("userid")
-username.send_keys(usernameStr)
+class Enroller:
+    thread = None
+    driver = None
+    enroll_time = None
 
-# enter password
-password = driver.find_element_by_name("pwd")
-password.send_keys(passwordStr)
+    def __init__(self, enroll_time=enroll_date, browser=Chrome, opts=ChromeOptions, headless=False,
+                 size=(1920, 1080)):
+        self.driver = browser_init(Browser=browser, Options=opts, headless=headless, size=size)
+        self.enroll_time = enroll_time
+        self.thread = Thread(target=self.enroll)
 
-# click login
-login = driver.find_element_by_name("Sign in")
-login.click()
-pause.seconds(3)
-driver.find_element_by_xpath(
-    "//img[@alt='a calendar with magnifying glass icon']"
-).click()
-pause.seconds(3)
+    def log(self, msg):
+        if headless or verbose:
+            print("{}: {}".format(self.thread.ident, msg))
 
-if headless or verbose:
-    print("Opening Shopping Cart")
-driver.find_element_by_link_text("Shopping Cart").click()
-pause.seconds(3)
-try:
-    driver.find_element_by_link_text(term).click()
-    pause.seconds(3)
-except BaseException:
-    pass
+    def enroll(self):
+        print("Starting browser at", start_time)
+        pause.until(start_time)
 
-if headless or verbose:
-    print("Selecting courses")
-# Select all courses in shopping cart
-chkboxes = driver.find_elements_by_class_name("ps-checkbox")
-for c in chkboxes:
-    c.click()
-if headless or verbose:
-    print("Selected {} courses".format(len(chkboxes)))
+        # setup the web self.driver
+        self.driver.get(base_url)
+        # wait for the login screen to load
+        WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.ID, "login")))
 
-if headless or verbose:
-    print("Clicking Enroll")
-driver.find_element_by_link_text("Enroll").click()
+        self.log("Logging into SIS")
+        # enter username & password
+        self.driver.find_element_by_name("userid").send_keys(usernameStr)
+        self.driver.find_element_by_name("pwd").send_keys(passwordStr)
 
-# click enroll in 5 seconds from now if testing
-if test:
-    enroll_date = datetime.now() + timedelta(seconds=3)
+        # click login
+        self.driver.find_element_by_name("Sign in").click()
+        pause.seconds(3)
+        self.driver.find_element_by_xpath(
+            "//img[@alt='a calendar with magnifying glass icon']"
+        ).click()
+        pause.seconds(3)
 
-# pause until 7AM and click immediately after
-print("Waiting to enroll until: {}".format(enroll_date))
-pause.until(enroll_date)
-driver.find_element_by_link_text("Yes").click()
-pause.seconds(10)
-driver.save_screenshot("confirm_page_{}.png".format(today))
+        self.log("Opening shopping cart.")
+        self.driver.find_element_by_link_text("Shopping Cart").click()
+        pause.seconds(3)
+        try:
+            self.driver.find_element_by_link_text(term).click()
+            pause.seconds(3)
+        except BaseException:
+            pass
+
+        self.log("Selecting courses...")
+        # Select all courses in shopping cart
+        chkboxes = self.driver.find_elements_by_class_name("ps-checkbox")
+        for c in chkboxes:
+            c.click()
+        self.log("Selected {} courses".format(len(chkboxes)))
+
+        self.driver.save_screenshot("preenroll_{}.png".format(today))
+
+        self.log("Clicking enroll.")
+        self.driver.find_element_by_link_text("Enroll").click()
+
+        # click enroll in 5 seconds from now if testing
+        if test:
+            self.enroll_time = datetime.now() + timedelta(seconds=3)
+
+        # pause until 7AM and click immediately after
+        print("Waiting to enroll until {}".format(self.enroll_time))
+        pause.until(self.enroll_time)
+        self.driver.find_element_by_link_text("Yes").click()
+        pause.seconds(10)
+        self.driver.save_screenshot("confirm_page_{}.png".format(today))
+
+
+# main stuff
+
