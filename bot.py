@@ -4,110 +4,122 @@ import math
 from datetime import datetime
 from datetime import timedelta
 from sys import argv
-
 import pause
 from selenium import webdriver
+from selenium.webdriver import Firefox, Chrome, FirefoxOptions, ChromeOptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-test = len(argv) >= 2 and (argv[1] == '-t' or argv[1] == '--test')
+# sketchy argparse
+test = "-t" in argv or "--test" in argv
+ignore_password_validation = "--ignore-password" in argv or "-i" in argv
+use_firefox = "--firefox" in argv or "-f" in argv
+headless = "--headless" in argv or "-h" in argv
+verbose = "--verbose" in argv or "-v" in argv
+
+if use_firefox:
+    Browser = Firefox
+    Options = FirefoxOptions
+else:
+    Browser = Chrome
+    Options = ChromeOptions
 
 # prompt for username
 usernameStr = input("SIS Username: ")
 # prompt for password using getpass to ensure password security
 passwordStr = getpass.getpass("SIS Password: ")
-passConfirm = getpass.getpass("Confirm Password: ")
-if passwordStr != passConfirm:
-    print("Passwords do not match.")
-    exit(0)
+if not ignore_password_validation:
+    passConfirm = getpass.getpass("Confirm Password: ")
+    if passwordStr != passConfirm:
+        print("Passwords do not match.")
+        exit(0)
 
+# if it's the day of registration
 today = datetime.now()
-# if it's the day of registration\
 enroll_date = datetime(today.year, today.month, today.day, 7)
 if today.hour > 7:
     # registration is tomorrow
     enroll_date += timedelta(days=1)
 
-# base cart link for sis-mobile
-# cart_link = "https://sisadmin.case.edu/psc/P92SCWR_18/EMPLOYEE/SA/c/SSR_STUDENT_FL.SSR_MD_SP_FL.GBL?Action=U&MD=Y&GMenu=SSR_STUDENT_FL&GComp=SSR_START_PAGE_FL&GPage=SSR_START_PAGE_FL&scname=CS_SSR_MANAGE_CLASSES_NAV&ICAJAXTrf=true"
-cart_link = "https://sisadmin.case.edu/psp/P92SCWR/?cmd=login"
+base_url = "https://sisadmin.case.edu/psp/P92SCWR/?cmd=login"
 
-# sketchy math to compute cart link code and append to base link
-month = datetime.now().month
 # if we're in the fall semester, register for the spring
-if 8 <= month <= 12:
-    # similar sketchy math
-    cart_link += str(math.floor(datetime.now().year / 1000))
-    cart_link += str(datetime.now().year + 1 - math.floor(datetime.now().year / 1000) * 1000)
-    # signifies january as first month of classes
-    cart_link += '1'
-# otherwise register for the fall - this assumes no summer registration
-else:
-    # sketchy math to isolate the 'acd' from some year abcd
-    cart_link += str(math.floor(datetime.now().year / 1000))
-    cart_link += str(datetime.now().year -
-                     math.floor(datetime.now().year / 1000) * 1000)
-    # signifies august as first month of classes
-    cart_link += '8'
+term = "{} {}".format(
+    "Spring" if 8 <= datetime.now().month <= 12 else "Fall", enroll_date.year
+)
 
 if test:
     print("Testing script...")
-    # start 5 seconds after the script
-    start_time = datetime.now() + timedelta(seconds=5)
+    # start 3 seconds after the script
+    start_time = datetime.now() + timedelta(seconds=3)
 else:
     # begin two minutes before registration is supposed to open
     start_time = enroll_date - timedelta(minutes=2)
 
+if headless or verbose:
+    print("Running in headless mode")
+
 print("Script will begin at", start_time)
 pause.until(start_time)
-driver = webdriver.Firefox()
-driver.get(cart_link)
 
+# setup the web driver
+options = Options()
+options.headless = True
+driver = Browser(options=options)
+if headless:
+    driver.set_window_size(1920, 1080)
+driver.get(base_url)
 # wait for the login screen to load
-WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, 'login')))
+WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "login")))
 
+if headless or verbose:
+    print("Logging into SIS")
 # enter username
 username = driver.find_element_by_name("userid")
 username.send_keys(usernameStr)
 
 # enter password
-password = driver.find_element_by_name('pwd')
+password = driver.find_element_by_name("pwd")
 password.send_keys(passwordStr)
 
 # click login
-login = driver.find_element_by_name('Sign in')
+login = driver.find_element_by_name("Sign in")
 login.click()
+pause.seconds(3)
+driver.find_element_by_xpath(
+    "//img[@alt='a calendar with magnifying glass icon']"
+).click()
+pause.seconds(3)
 
-driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Classes & Enrollment'])[1]/following::div[3]").click()
-pause.seconds(5)
+if headless or verbose:
+    print("Opening Shopping Cart")
 driver.find_element_by_link_text("Shopping Cart").click()
 pause.seconds(3)
-driver.find_element_by_link_text("Spring 2020").click()
+try:
+    driver.find_element_by_link_text(term).click()
+    pause.seconds(3)
+except BaseException:
+    pass
 
-# # wait for cart to load
-# WebDriverWait(driver, 10).until(
-#     EC.presence_of_element_located((By.ID, "win15divACAD_CAR_TBL_DESCR$1")))
-#
-# # Select term
-# driver.find_element_by_id("win15divACAD_CAR_TBL_DESCR$1").click()
-
-pause.seconds(3)
-# Select courses
+if headless or verbose:
+    print("Selecting courses")
+# Select all courses in shopping cart
 chkboxes = driver.find_elements_by_class_name("ps-checkbox")
 for c in chkboxes:
     c.click()
 
+if headless or verbose:
+    print("Clicking Enroll")
 driver.find_element_by_link_text("Enroll").click()
 
 # click enroll in 5 seconds from now if testing
 if test:
-    enroll_date = datetime.now() + timedelta(seconds=5)
+    enroll_date = datetime.now() + timedelta(seconds=3)
 
 # pause until 7AM and click immediately after
-print("Enrolling at: ", enroll_date)
+print("Waiting to enroll until: {}".format(enroll_date))
 pause.until(enroll_date)
-
 driver.find_element_by_link_text("Yes").click()
-
-print("uhhhhh i guess im done here")
+pause.seconds(10)
+driver.save_screenshot("confirm_page_{}.png".format(today))
