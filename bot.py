@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 import getpass
-import math
 from datetime import datetime
 from datetime import timedelta
 from sys import argv
+
 import pause
-from selenium import webdriver
 from selenium.webdriver import Firefox, Chrome, FirefoxOptions, ChromeOptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
@@ -108,6 +107,8 @@ if headless or verbose:
 chkboxes = driver.find_elements_by_class_name("ps-checkbox")
 for c in chkboxes:
     c.click()
+if headless or verbose:
+    print("Selected {} courses".format(len(chkboxes)))
 
 if headless or verbose:
     print("Clicking Enroll")
