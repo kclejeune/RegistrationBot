@@ -58,7 +58,7 @@ else:
 
 # if it's the day of registration
 today = datetime.now()
-enroll_date = datetime(today.year, today.month, today.day, 6, 59, 59, 980000)
+enroll_date = datetime(today.year, today.month, today.day, 7)
 if today.hour > 7:
     # registration is tomorrow
     enroll_date += timedelta(days=1)
