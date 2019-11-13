@@ -64,7 +64,7 @@ pause.until(start_time)
 
 # setup the web driver
 options = Options()
-options.headless = True
+options.headless = headless
 driver = Browser(options=options)
 if headless:
     driver.set_window_size(1920, 1080)
