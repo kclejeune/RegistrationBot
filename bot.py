@@ -150,7 +150,6 @@ class Enroller:
         self.log("Clicking enroll.")
         self.driver.find_element_by_link_text("Enroll").click()
 
-
         # pause until 7AM and click immediately after
         self.log("Waiting to enroll until {}".format(self.enroll_time), debug=False)
         pause.until(self.enroll_time)
@@ -168,6 +167,12 @@ if test:
 mid_thread = int(num_threads / 2)
 for i in range(num_threads):
     # Click times should "surround" 7AM on enrollment day, in intervals of 2ms apart
-    offset = timedelta(milliseconds=2*(i - mid_thread))
-    e = Enroller(enroll_date + offset, browser=Firefox, opts=FirefoxOptions, headless=headless, test=test)
+    offset = timedelta(milliseconds=2 * (i - mid_thread))
+    e = Enroller(
+        enroll_date + offset,
+        browser=Firefox,
+        opts=FirefoxOptions,
+        headless=headless,
+        test=test,
+    )
     e.thread.start()
