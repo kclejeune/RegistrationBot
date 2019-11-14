@@ -11,7 +11,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
 # sketchy argparse
-if "-h" in argv or "--help" in argv:
+if "--help" in argv:
     print("Commands: ")
     print("\t --ignore or -i: Skip duplicate password request because you are lazy")
     print(
@@ -22,7 +22,6 @@ if "-h" in argv or "--help" in argv:
     )
     print("\t --verbose or -v: Prints out a bunch of shit")
     print("\t --creds or -c: For the very lazy")
-    print()
     exit()
 
 
@@ -178,6 +177,7 @@ class Enroller:
         self.log("Enroll request sent.", debug=False)
         pause.seconds(10)
         self.driver.save_screenshot("confirm_page_{}.png".format(self.enroll_time))
+
 
 # click enroll in 5 seconds from now if testing
 if test:
