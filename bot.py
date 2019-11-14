@@ -11,6 +11,21 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
 # sketchy argparse
+if "-h" in argv or "--help" in argv:
+    print("Commands: ")
+    print("\t --ignore or -i: Skip duplicate password request because you are lazy")
+    print(
+        "\t --firefox or -f: Use Firefox instead of default chrome for the more astute among us"
+    )
+    print(
+        "\t --headless or -h: Runs the bot headlessly because why should you have a head"
+    )
+    print("\t --verbose or -v: Prints out a bunch of shit")
+    print("\t --creds or -c: For the very lazy")
+    print()
+    exit()
+
+
 test = "-t" in argv or "--test" in argv
 ignore_password_validation = "--ignore-password" in argv or "-i" in argv
 use_firefox = "--firefox" in argv or "-f" in argv
@@ -26,6 +41,7 @@ elif "--num-threads" in argv:
     num_threads = int(argv[num_threads_i])
 
 print("Using {} thread(s).".format(num_threads))
+use_cred_file = "--cred" in argv or "-c" in argv
 
 if use_firefox:
     Browser = Firefox
@@ -34,15 +50,20 @@ else:
     Browser = Chrome
     Options = ChromeOptions
 
-# prompt for username
-usernameStr = input("SIS Username: ")
-# prompt for password using getpass to ensure password security
-passwordStr = getpass.getpass("SIS Password: ")
-if not ignore_password_validation:
-    passConfirm = getpass.getpass("Confirm Password: ")
-    if passwordStr != passConfirm:
-        print("Passwords do not match.")
-        exit(0)
+if use_cred_file:
+    with open("creds.txt", "r") as f:
+        usernameStr = f.readline()[:-1]
+        passwordStr = f.readline()
+else:
+    # prompt for username
+    usernameStr = input("SIS Username: ")
+    # prompt for password using getpass to ensure password security
+    passwordStr = getpass.getpass("SIS Password: ")
+    if not ignore_password_validation:
+        passConfirm = getpass.getpass("Confirm Password: ")
+        if passwordStr != passConfirm:
+            print("Passwords do not match.")
+            exit(0)
 
 # if it's the day of registration
 today = datetime.now()
@@ -157,7 +178,6 @@ class Enroller:
         self.log("Enroll request sent.", debug=False)
         pause.seconds(10)
         self.driver.save_screenshot("confirm_page_{}.png".format(self.enroll_time))
-
 
 # click enroll in 5 seconds from now if testing
 if test:
