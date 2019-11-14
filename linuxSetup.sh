@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Install necessary dependencies
-sudo apt install chromium-chromedriver python3 python3-pip
+sudo apt install chromium-chromedriver firefox-geckodriver python3 python3-pip
 pip3 install -r requirements.txt
 clear
 

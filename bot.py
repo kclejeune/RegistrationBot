@@ -51,8 +51,8 @@ else:
 
 if use_cred_file:
     with open("creds.txt", "r") as f:
-        usernameStr = f.readline()[:-1]
-        passwordStr = f.readline()
+        usernameStr = f.readline().strip()
+        passwordStr = f.readline().strip()
 else:
     # prompt for username
     usernameStr = input("SIS Username: ")
@@ -127,6 +127,7 @@ class Enroller:
 
     def enroll(self):
         self.log("Starting browser at {}".format(start_time), debug=False)
+        self.log("Registering for {}".format(term))
         pause.until(start_time)
 
         # setup the web self.driver
@@ -158,17 +159,21 @@ class Enroller:
         except BaseException:
             pass
 
-        self.log("Selecting courses...")
-        # Select all courses in shopping cart
-        chkboxes = self.driver.find_elements_by_class_name("ps-checkbox")
-        for c in chkboxes:
-            c.click()
-        self.log("Selected {} courses".format(len(chkboxes)))
+        try:
+            self.log("Selecting courses...")
+            # Select all courses in shopping cart
+            chkboxes = self.driver.find_elements_by_class_name("ps-checkbox")
+            for c in chkboxes:
+                c.click()
+            self.log("Selected {} courses".format(len(chkboxes)))
 
-        self.driver.save_screenshot("preenroll_{}.png".format(self.enroll_time))
+            self.driver.save_screenshot("preenroll_{}.png".format(self.enroll_time))
 
-        self.log("Clicking enroll.")
-        self.driver.find_element_by_link_text("Enroll").click()
+            self.log("Clicking enroll.")
+            self.driver.find_element_by_link_text("Enroll").click()
+        except BaseException:
+            print("No courses in shopping cart. Terminating script.")
+            exit(0)
 
         # pause until 7AM and click immediately after
         self.log("Waiting to enroll until {}".format(self.enroll_time), debug=False)
@@ -190,8 +195,8 @@ for i in range(num_threads):
     offset = timedelta(milliseconds=2 * (i - mid_thread))
     e = Enroller(
         enroll_date + offset,
-        browser=Firefox,
-        opts=FirefoxOptions,
+        browser=Browser,
+        opts=Options,
         headless=headless,
         test=test,
     )
