@@ -6,8 +6,8 @@ if [ ! -e /usr/local/bin/brew ]; then
 fi
 
 # install necessary dependencies
-brew cask install google-chrome chromedriver
-brew install python
+brew cask install google-chrome chromedriver firefox
+brew install python geckodriver
 pip3 install -r requirements.txt
 
 # change time server to match SIS
