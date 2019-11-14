@@ -74,8 +74,10 @@ if today.hour > 7:
 base_url = "https://sisadmin.case.edu/psp/P92SCWR/?cmd=login"
 
 # if we're in the fall semester, register for the spring
-term = "{} {}".format(
-    "Spring" if 8 <= datetime.now().month <= 12 else "Fall", enroll_date.year
+term = (
+    "Spring {}".format(enroll_date.year + 1)
+    if 8 <= datetime.now().month <= 12
+    else "Fall {}".format(enroll_date.year)
 )
 
 if test:
@@ -99,10 +101,6 @@ def browser_init(
 
 
 class Enroller:
-    thread = None
-    driver = None
-    enroll_time = None
-
     def __init__(
         self,
         enroll_time=enroll_date,
@@ -116,7 +114,7 @@ class Enroller:
             Browser=browser, Options=opts, headless=headless, size=size
         )
         self.enroll_time = enroll_time
-        self.thread = Thread(target=self.enroll)
+        self.thread = Thread(target=self.register)
         self.headless = headless
         self.verbose = verbose
         self.test = test
@@ -125,37 +123,52 @@ class Enroller:
         if self.headless or self.verbose or not debug:
             print("{}: {}".format(self.thread.name, msg))
 
-    def enroll(self):
-        self.log("Starting browser at {}".format(start_time), debug=False)
-        self.log("Registering for {}".format(term))
+    def register(self):
+        # wait until 15 minutes before registration to start the browser
         pause.until(start_time)
 
+        # log in once we hit the start time and navigate to the shopping cart
+        self.authenticate()
+        self.open_cart()
+
+        # pause until 7AM and click immediately after
+        self.log("Waiting to enroll until {}".format(self.enroll_time), debug=False)
+        pause.until(self.enroll_time)
+        self.enroll()
+
+        # clean up stray processes
+        if headless:
+            self.cleanup()
+
+    def authenticate(self):
         # setup the web self.driver
+        self.log("Loading SIS")
         self.driver.get(base_url)
         # wait for the login screen to load
         WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((By.ID, "login"))
         )
 
-        self.log("Logging into SIS")
+        self.log("Logging in")
         # enter username & password
         self.driver.find_element_by_name("userid").send_keys(usernameStr)
         self.driver.find_element_by_name("pwd").send_keys(passwordStr)
 
         # click login
         self.driver.find_element_by_name("Sign in").click()
-        pause.seconds(3)
+        pause.seconds(5)
         self.driver.find_element_by_xpath(
             "//img[@alt='a calendar with magnifying glass icon']"
         ).click()
-        pause.seconds(3)
+        pause.seconds(5)
 
+    def open_cart(self):
         self.log("Opening shopping cart.")
         self.driver.find_element_by_link_text("Shopping Cart").click()
-        pause.seconds(3)
+        pause.seconds(5)
         try:
             self.driver.find_element_by_link_text(term).click()
-            pause.seconds(3)
+            pause.seconds(5)
         except BaseException:
             pass
 
@@ -167,7 +180,7 @@ class Enroller:
                 c.click()
             self.log("Selected {} courses".format(len(chkboxes)))
 
-            self.driver.save_screenshot("preenroll_{}.png".format(self.enroll_time))
+            # self.driver.save_screenshot("preenroll_{}.png".format(self.enroll_time))
 
             self.log("Clicking enroll.")
             self.driver.find_element_by_link_text("Enroll").click()
@@ -175,24 +188,29 @@ class Enroller:
             print("No courses in shopping cart. Terminating script.")
             exit(0)
 
-        # pause until 7AM and click immediately after
-        self.log("Waiting to enroll until {}".format(self.enroll_time), debug=False)
-        pause.until(self.enroll_time)
+    def enroll(self):
         self.driver.find_element_by_link_text("Yes").click()
-        self.log("Enroll request sent.", debug=False)
+        self.log("Enroll request sent at {}".format(datetime.now()), debug=False)
         pause.seconds(10)
-        self.driver.save_screenshot("confirm_page_{}.png".format(self.enroll_time))
+        if self.headless:
+            self.driver.save_screenshot("confirm_page_{}.png".format(self.enroll_time))
+
+    def cleanup(self):
+        if headless:
+            self.driver.quit()
+        exit(0)
 
 
-# click enroll in 5 seconds from now if testing
+# click enroll in a specified delay if testing
 if test:
-    enroll_date = datetime.now() + timedelta(seconds=45)
+    delay = timedelta(minutes=1)
+    enroll_date = datetime.now() + delay
 
 # main stuff
 mid_thread = int(num_threads / 2)
 for i in range(num_threads):
     # Click times should "surround" 7AM on enrollment day, in intervals of 2ms apart
-    offset = timedelta(milliseconds=2 * (i - mid_thread))
+    offset = timedelta(milliseconds=5 * (i - mid_thread))
     e = Enroller(
         enroll_date + offset,
         browser=Browser,
