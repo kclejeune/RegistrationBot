@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import getpass
-from datetime import datetime
-from datetime import timedelta
+from datetime import datetime, timedelta
 from sys import argv
 from threading import Thread
 
@@ -64,15 +63,15 @@ if test:
     # start 3 seconds after the script
     start_time = datetime.now() + timedelta(seconds=3)
 else:
-    # begin two minutes before registration is supposed to open
-    start_time = enroll_date - timedelta(minutes=2)
+    # begin 15 minutes before registration is supposed to open
+    start_time = enroll_date - timedelta(minutes=15)
 
 
 def browser_init(
     Browser=Chrome, Options=ChromeOptions, headless=False, size=(1920, 1080)
 ):
     options = Options()
-    options.headless = True
+    options.headless = headless
     driver = Browser(options=options)
     if headless:
         driver.set_window_size(size[0], size[1])
@@ -102,12 +101,12 @@ class Enroller:
         self.verbose = verbose
         self.test = test
 
-    def log(self, msg):
-        if self.headless or self.verbose:
+    def log(self, msg, debug=True):
+        if self.headless or self.verbose or not debug:
             print("{}: {}".format(self.thread.name, msg))
 
     def enroll(self):
-        print("Starting browser at", start_time)
+        self.log("Starting browser at {}".format(start_time), debug=False)
         pause.until(start_time)
 
         # setup the web self.driver
@@ -146,24 +145,29 @@ class Enroller:
             c.click()
         self.log("Selected {} courses".format(len(chkboxes)))
 
-        self.driver.save_screenshot("preenroll_{}.png".format(today))
+        self.driver.save_screenshot("preenroll_{}.png".format(self.enroll_time))
 
         self.log("Clicking enroll.")
         self.driver.find_element_by_link_text("Enroll").click()
 
-        # click enroll in 5 seconds from now if testing
-        if test:
-            self.enroll_time = datetime.now() + timedelta(seconds=3)
 
         # pause until 7AM and click immediately after
-        print("Waiting to enroll until {}".format(self.enroll_time))
+        self.log("Waiting to enroll until {}".format(self.enroll_time), debug=False)
         pause.until(self.enroll_time)
         self.driver.find_element_by_link_text("Yes").click()
+        self.log("Enroll request sent.", debug=False)
         pause.seconds(10)
-        self.driver.save_screenshot("confirm_page_{}.png".format(today))
+        self.driver.save_screenshot("confirm_page_{}.png".format(self.enroll_time))
 
+
+# click enroll in 5 seconds from now if testing
+if test:
+    enroll_date = datetime.now() + timedelta(seconds=45)
 
 # main stuff
+mid_thread = int(num_threads / 2)
 for i in range(num_threads):
-    e = Enroller(enroll_date, browser=Firefox, opts=FirefoxOptions, headless=headless, test=test)
+    # Click times should "surround" 7AM on enrollment day, in intervals of 2ms apart
+    offset = timedelta(milliseconds=2*(i - mid_thread))
+    e = Enroller(enroll_date + offset, browser=Firefox, opts=FirefoxOptions, headless=headless, test=test)
     e.thread.start()
