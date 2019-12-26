@@ -3,3 +3,5 @@
 *.png
 geckodriver.log
 creds.txt
+venv/
+.envrc
