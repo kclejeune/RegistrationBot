@@ -2,7 +2,7 @@
 
 Ever needed a class with one spot left? Get a bot to do it for you (if you're using \*NIX, at least)
 
-## Dependency Install Scripts
+## Dependencies
 
 Clone the repository and navigate to its directory.
 
@@ -11,63 +11,39 @@ git clone https://github.com/kclejeune/RegistrationBot.git
 cd RegistrationBot
 ```
 
-To run the installer script, use 
-```bash
-bash linuxInstall.sh
-``` 
-or 
-```bash
-bash macInstall.sh
+This project uses Nix to manage dependencies. You can install it on macOS with
+
 ```
-depending on your operating system.
-
-## Manual Install Instructions
-
-Install the dependencies according to your preferred OS.
-
-### Linux
-
-```bash
-sudo apt install python3 python3-pip chromium-chromedriver
+sh <(curl -L https://nixos.org/nix/install) --daemon --darwin-use-unencrypted-nix-store-volume
 ```
 
-### macOS
+or on Linux with
 
-We'll use homebrew as our package manager to install the things we need. Running the following will install it if it isn't yet installed, along with the necessary dependencies.
-
-```bash
-# check if homebrew is installed and install if not
-if [ ! -e /usr/local/bin/brew ]; then
-    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-fi
-
-# install necessary dependencies
-brew cask install chromedriver google-chrome
-brew install python
-clear
+```
+sh <(curl -L https://nixos.org/nix/install) --daemon
 ```
 
-### Both
+### Manual Install Instructions
 
-We'll need a few python libraries.  You can install them with
+You can alternatively install these dependencies to run the project:
+- `python3`
+- `selenium`
+- `chromedriver`
+- `geckodriver`
 
-```bash
-cd ~/RegistrationBot
-pip3 install -r requirements.txt
-```
-
+all further instructions will assume that Nix is installed.
 ## Using the Script
 
 **WARNING: YOU MUST MAKE SURE YOUR COMPUTER WILL NOT SLEEP BEFORE 7:00.  PLUG IT IN AND CHECK THE SETTINGS**
 
-It is *highly* recommended to use a utility to prevent your computer from sleeping. 
-I'd recommend running `brew cask install keepingyouawake` or `sudo apt install caffeine`, which will allow you to 'caffeinate' your computer overnight.
+It is *highly* recommended to use a utility to prevent your computer from sleeping.
+I'd recommend running something like `brew cask install keepingyouawake` or `sudo apt install caffeine`, which will allow you to 'caffeinate' your computer overnight.
 
 To run the script, navigate to the RegistrationBot directory and run:
 
 ```bash
-python3 bot.py
+nix-shell --run "python3 bot.py --threads 8"
 ```
 
-Follow the instructions to enter your username, password (type carefully, you can't see the prompt for security reasons), and the semester you're registering for (i.e. registering for fall classes = f)
+Follow the instructions to enter your username and password (type carefully, you can't see the prompt for security reasons).
 That's it, good luck!
