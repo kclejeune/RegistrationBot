@@ -5,3 +5,5 @@ geckodriver.log
 creds.txt
 venv/
 .envrc
+.direnv/
+__pycache__/
