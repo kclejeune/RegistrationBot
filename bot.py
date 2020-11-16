@@ -8,12 +8,11 @@ from selenium.webdriver import Chrome, ChromeOptions, Firefox, FirefoxOptions
 
 def main(args):
     print(f"Using {args.threads} thread(s).")
-    if args.firefox:
-        Browser = Firefox
-        Options = FirefoxOptions
-    else:
-        Browser = Chrome
-        Options = ChromeOptions
+    Browser, Options = (
+        (Firefox, FirefoxOptions)
+        if args.browser == "firefox"
+        else (Chrome, ChromeOptions)
+    )
 
     if args.credentials:
         with open(args.credentials, "r") as f:
@@ -78,24 +77,34 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     # Parse and print the results
+
     parser.add_argument(
-        "--ignore",
-        "-i",
-        action="store_true",
-        help="Skip the duplicate password prompt",
-    )
-    parser.add_argument(
-        "--firefox",
-        "-f",
-        action="store_true",
-        help="Use Firefox with Geckodriver instead of Chrome",
+        "--browser",
+        "-b",
+        type=str,
+        choices=["chrome", "firefox"],
+        default="chrome",
+        help="Specify the browser to use (default chrome)",
     )
     parser.add_argument(
         "--threads",
         "-n",
         type=int,
         default=1,
-        help="Number of thread instances to spawn",
+        help="Number of thread instances to spawn (default 1)",
+    )
+    parser.add_argument(
+        "--credentials",
+        "-c",
+        type=str,
+        help="load user credentials from this file with username on first line, password on second line",
+    )
+    parser.add_argument(
+        "--url",
+        "-u",
+        type=str,
+        default="https://sisadmin.case.edu/psp/P92SCWR/?cmd=login",
+        help="specify a different SIS base URL (defaults to the login page)",
     )
     parser.add_argument(
         "--headless",
@@ -103,29 +112,17 @@ if __name__ == "__main__":
         help="Run as a headless (non-visible) browser",
     )
     parser.add_argument(
-        "--verbose",
-        "-v",
+        "--ignore",
+        "-i",
         action="store_true",
-        help="print out more status stuff",
+        help="Skip the duplicate password prompt",
     )
     parser.add_argument(
-        "--credentials",
-        "-c",
-        type=str,
-        help="load user credentials from the specified file",
+        "--test", "-t", action="store_true", help="run a test to verify functionality",
     )
     parser.add_argument(
-        "--test",
-        "-t",
-        action="store_true",
-        help="run a test to verify functionality",
+        "--verbose", "-v", action="store_true", help="print out more status stuff",
     )
-    parser.add_argument(
-        "--url",
-        "-u",
-        type=str,
-        default="https://sisadmin.case.edu/psp/P92SCWR/?cmd=login",
-        help="specify a different SIS base URL",
-    )
+
     args = parser.parse_args()
     main(args)

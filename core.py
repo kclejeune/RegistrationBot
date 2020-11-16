@@ -64,6 +64,7 @@ class Enroller:
 
     def register(self):
         # wait until 15 minutes before registration to start the browser
+        self.log(f"Waiting to begin until {self.start_time}")
         pause(self.start_time)
 
         # log in once we hit the start time and navigate to the shopping cart
