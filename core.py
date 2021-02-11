@@ -1,8 +1,7 @@
-#!/usr/bin/env python3
 import time
 from datetime import datetime
 from threading import Thread
-from selenium.webdriver import Chrome, ChromeOptions, Firefox, FirefoxOptions
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
@@ -17,17 +16,6 @@ def pause(until: datetime):
             break
 
 
-def browser_init(
-    Browser=Chrome, Options=ChromeOptions, headless=False, size=(1920, 1080)
-):
-    options = Options()
-    options.headless = headless
-    driver = Browser(options=options)
-    if headless:
-        driver.set_window_size(size[0], size[1])
-    return driver
-
-
 class Enroller:
     def __init__(
         self,
@@ -36,15 +24,15 @@ class Enroller:
         term,
         username: str,
         password: str,
-        browser=Chrome,
-        opts=ChromeOptions,
+        browser,
+        opts,
         headless=False,
         size=(1920, 1080),
         verbose=False,
         test=False,
         base_url="https://sisadmin.case.edu/psp/P92SCWR/?cmd=login",
     ):
-        self.driver = browser_init(
+        self.driver = self.browser_init(
             Browser=browser, Options=opts, headless=headless, size=size
         )
         self.start_time = start_time
@@ -57,6 +45,14 @@ class Enroller:
         self.base_url = base_url
         self.username = username
         self.password = password
+
+    def _browser_init(self, Browser, Options, headless=False, size=(1920, 1080)):
+        options = Options()
+        options.headless = headless
+        driver = Browser(options=options)
+        if headless:
+            driver.set_window_size(size[0], size[1])
+        return driver
 
     def log(self, msg, debug=True):
         if self.headless or self.verbose or not debug:

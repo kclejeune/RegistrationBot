@@ -1,33 +1,41 @@
 #!/usr/bin/env python3
-from core import Enroller
-import getpass
+
 from datetime import datetime, timedelta
-import argparse
+
+import typer
 from selenium.webdriver import Chrome, ChromeOptions, Firefox, FirefoxOptions
 
+from core import Enroller
 
-def main(args):
-    print(f"Using {args.threads} thread(s).")
+
+def main(
+    username: str = typer.Option(None, prompt="SIS Username", help="SIS Username"),
+    password: str = typer.Option(
+        None,
+        prompt="SIS Password",
+        confirmation_prompt=True,
+        hide_input=True,
+        help="SIS Password",
+    ),
+    url: str = typer.Option(
+        "https://sisadmin.case.edu/psp/P92SCWR/?cmd=login",
+        help="SIS base URL to use",
+    ),
+    threads: int = typer.Option(1, help="the number of instances to run"),
+    browser: str = typer.Option("firefox", help="the browser instance to run"),
+    test: bool = typer.Option(
+        False,
+        help="whether to run in test mode by attempting to register immediately instead of waiting",
+    ),
+    headless: bool = typer.Option(
+        True, help="whether to run the script without opening a browser GUI"
+    ),
+    verbose: bool = typer.Option(False, help="whether to log extra output"),
+):
+    typer.secho(f"Using {threads} thread(s).")
     Browser, Options = (
-        (Firefox, FirefoxOptions)
-        if args.browser == "firefox"
-        else (Chrome, ChromeOptions)
+        (Firefox, FirefoxOptions) if browser == "firefox" else (Chrome, ChromeOptions)
     )
-
-    if args.credentials:
-        with open(args.credentials, "r") as f:
-            usernameStr = f.readline().strip()
-            passwordStr = f.readline().strip()
-    else:
-        # prompt for username
-        usernameStr = input("SIS Username: ")
-        # prompt for password using getpass to ensure password security
-        passwordStr = getpass.getpass("SIS Password: ")
-        if not args.ignore:
-            passConfirm = getpass.getpass("Confirm Password: ")
-            if passwordStr != passConfirm:
-                print("Passwords do not match.")
-                exit(0)
 
     # if it's the day of registration
     today = datetime.now()
@@ -43,8 +51,8 @@ def main(args):
         else f"Fall {enroll_date.year}"
     )
 
-    if args.test:
-        print("Testing script...")
+    if test:
+        typer.secho("Testing script...")
         # start 3 seconds after the script
         start_time = datetime.now() + timedelta(seconds=3)
         delay = timedelta(minutes=1)
@@ -54,75 +62,25 @@ def main(args):
         start_time = enroll_date - timedelta(minutes=15)
 
     # main stuff
-    mid_thread = args.threads // 2
-    for i in range(args.threads):
+    mid_thread = threads // 2
+    for i in range(threads):
         # Click times should "surround" 7AM on enrollment day, in intervals of 2ms apart
         offset = timedelta(milliseconds=5 * (i - mid_thread))
         e = Enroller(
             enroll_time=enroll_date + offset,
             start_time=start_time,
             term=term,
-            username=usernameStr,
-            password=passwordStr,
+            username=username,
+            password=password,
             browser=Browser,
             opts=Options,
-            headless=args.headless,
-            test=args.test,
-            base_url=args.url,
-            verbose=args.verbose,
+            headless=headless,
+            test=test,
+            base_url=url,
+            verbose=verbose,
         )
         e.thread.start()
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    # Parse and print the results
-
-    parser.add_argument(
-        "--browser",
-        "-b",
-        type=str,
-        choices=["chrome", "firefox"],
-        default="chrome",
-        help="Specify the browser to use (default chrome)",
-    )
-    parser.add_argument(
-        "--threads",
-        "-n",
-        type=int,
-        default=1,
-        help="Number of thread instances to spawn (default 1)",
-    )
-    parser.add_argument(
-        "--credentials",
-        "-c",
-        type=str,
-        help="load user credentials from this file with username on first line, password on second line",
-    )
-    parser.add_argument(
-        "--url",
-        "-u",
-        type=str,
-        default="https://sisadmin.case.edu/psp/P92SCWR/?cmd=login",
-        help="specify a different SIS base URL (defaults to the login page)",
-    )
-    parser.add_argument(
-        "--headless",
-        action="store_true",
-        help="Run as a headless (non-visible) browser",
-    )
-    parser.add_argument(
-        "--ignore",
-        "-i",
-        action="store_true",
-        help="Skip the duplicate password prompt",
-    )
-    parser.add_argument(
-        "--test", "-t", action="store_true", help="run a test to verify functionality",
-    )
-    parser.add_argument(
-        "--verbose", "-v", action="store_true", help="print out more status stuff",
-    )
-
-    args = parser.parse_args()
-    main(args)
+    typer.run(main)
