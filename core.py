@@ -8,6 +8,11 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 
 def pause(until: datetime):
+    """block until a specified datetime
+
+    Args:
+        until (datetime): the time at which to resume program execution
+    """
     while True:
         diff = until - datetime.now()
         if diff.total_seconds() > 0:
@@ -32,7 +37,7 @@ class Enroller:
         test=False,
         base_url="https://sisadmin.case.edu/psp/P92SCWR/?cmd=login",
     ):
-        self.driver = self.browser_init(
+        self.driver = self._browser_init(
             Browser=browser, Options=opts, headless=headless, size=size
         )
         self.start_time = start_time
