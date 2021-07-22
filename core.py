@@ -29,13 +29,13 @@ class Enroller:
         term,
         username: str,
         password: str,
+        base_url: str,
         browser,
         opts,
         headless=False,
         size=(1920, 1080),
         verbose=False,
         test=False,
-        base_url="https://sisadmin.case.edu/psp/P92SCWR/?cmd=login",
     ):
         self.driver = self._browser_init(
             Browser=browser, Options=opts, headless=headless, size=size
