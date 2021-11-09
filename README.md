@@ -23,21 +23,30 @@ or on Linux with
 sh <(curl -L https://nixos.org/nix/install) --daemon
 ```
 
+Finally, ensure that Firefox is installed.
+
 ### Manual Install Instructions
 
 You can alternatively install these dependencies to run the project:
 - `python3`
 - `selenium`
-- `chromedriver`
 - `geckodriver`
 
-all further instructions will assume that Nix is installed.
+all further instructions will assume that Nix and Firefox are installed.
+
 ## Using the Script
 
 **WARNING: YOU MUST MAKE SURE YOUR COMPUTER WILL NOT SLEEP BEFORE 7:00.  PLUG IT IN AND CHECK THE SETTINGS**
 
 It is *highly* recommended to use a utility to prevent your computer from sleeping.
-I'd recommend running something like `brew cask install keepingyouawake` or `sudo apt install caffeine`, which will allow you to 'caffeinate' your computer overnight.
+I'd recommend running something like `brew cask install keepingyouawake` or `sudo apt install caffeine`, which will allow you to 'caffeinate' your computer overnight. On macOS, you can
+do this with `caffeinate -i nix-shell --run "[see command below]"`.
+
+To test the script in an actual browser window, run:
+
+```bash
+nix-shell --run "python3 bot.py --test --no-headless"
+```
 
 To run the script, navigate to the RegistrationBot directory and run:
 
