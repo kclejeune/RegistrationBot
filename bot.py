@@ -6,7 +6,11 @@ import typer
 from selenium.webdriver import Chrome, ChromeOptions, Firefox, FirefoxOptions
 
 from core import Enroller
+from enum import Enum
 
+class BrowserType(str, Enum):
+    FIREFOX = "firefox"
+    CHROME = "chrome"
 
 def main(
     username: str = typer.Option(None, prompt="SIS Username", help="SIS Username"),
@@ -22,7 +26,7 @@ def main(
         help="SIS base URL to use",
     ),
     threads: int = typer.Option(1, help="the number of instances to run"),
-    browser: str = typer.Option("firefox", help="the browser instance to run"),
+    browser: BrowserType = typer.Option(BrowserType.FIREFOX, help="the browser instance to run"),
     test: bool = typer.Option(
         False,
         help="whether to run in test mode by attempting to register immediately instead of waiting",
@@ -34,7 +38,7 @@ def main(
 ):
     typer.secho(f"Using {threads} thread(s).")
     Browser, Options = (
-        (Firefox, FirefoxOptions) if browser == "firefox" else (Chrome, ChromeOptions)
+        (Firefox, FirefoxOptions) if browser == BrowserType.FIREFOX else (Chrome, ChromeOptions)
     )
 
     # if it's the day of registration
